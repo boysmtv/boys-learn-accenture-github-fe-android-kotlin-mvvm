@@ -1,0 +1,52 @@
+package com.boys.assets.accenture.activity.fragment.favorite
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.boys.assets.accenture.activity.fragment.popular.vm.PopularViewModel
+import com.boys.assets.accenture.databinding.FragmentPopularBinding
+import com.boys.assets.accenture.helper.InterfaceDialog
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+class FavoriteFragment : Fragment() {
+
+    private val TAG = this::class.java.simpleName
+    private val popularVM by viewModel<PopularViewModel>()
+
+    private lateinit var interfaceDialog: InterfaceDialog
+    private lateinit var binding: FragmentPopularBinding
+
+    fun newInstance(): FavoriteFragment {
+        return FavoriteFragment()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        binding = FragmentPopularBinding.inflate(inflater,container,false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        interfaceDialog = InterfaceDialog(requireContext())
+
+        setup()
+    }
+
+    private fun setup(){
+        val favoriteAdapter = FavoriteAdapter()
+        binding.tvPopular.adapter = favoriteAdapter
+        popularVM.getAll().let { it1 -> favoriteAdapter.provided(it1, requireContext(), interfaceDialog, popularVM) }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        setup()
+    }
+}
