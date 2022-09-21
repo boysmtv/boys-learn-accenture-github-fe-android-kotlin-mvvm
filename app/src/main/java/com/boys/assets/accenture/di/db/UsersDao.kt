@@ -12,8 +12,8 @@ interface UsersDao {
     @Delete
     fun delete(users: Users)
 
-    @Query("select count(*) from users where id = :id")
-    fun getByID(id: Int): Int
+    @Query("select count(*) from users where login = :login")
+    fun getByID(login: String): Int
 
     @Query("select * from users order by id asc")
     fun getAll(): List<Users>

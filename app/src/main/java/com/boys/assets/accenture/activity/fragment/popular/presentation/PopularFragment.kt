@@ -24,8 +24,9 @@ class PopularFragment : Fragment() {
     private lateinit var interfaceDialog: InterfaceDialog
     private lateinit var binding: FragmentPopularBinding
     private lateinit var listModel : List<Users>
+    private val popularAdapter = PopularAdapter()
 
-    private var query = ""
+    private var isStart = false
 
     fun newInstance(): PopularFragment {
         return PopularFragment()
@@ -43,49 +44,37 @@ class PopularFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         interfaceDialog = InterfaceDialog(requireContext())
         listModel = listOf()
+        LogUtil.e(TAG, "onViewCreated")
 
-        // Gets the data from the passed bundle
-        val bundle = arguments
-        if (bundle != null){
-            LogUtil.e(TAG, "bundle")
-            val msg = bundle.getString("search")
-            if (!msg.isNullOrBlank()){
-                if (!msg.isNullOrEmpty()){
-                    query = msg
-                }
-            }
-        }
+        setup()
         setNews()
     }
 
     private fun setNews() {
-//        q = "tom+repos:>42+followers:>1000",
-        val reqModel = PopularReqModel(
-            q = query,
-            sort = "stars",
-            per_page = 20,
-            page = 1
-        )
-
         if (requireContext().isNetworkAvailable()) {
             interfaceDialog.showDialogLoading("loading ..")
-            if (query != ""){
-                popularVM.doIt(reqModel)
-            }else{
-                popularVM.doIt()
-            }
+            popularVM.doIt()
         } else {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.no_internet_connection),
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(requireContext(), getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setup(){
+        binding.tvPopular.adapter = popularAdapter
 
         with(popularVM) {
             onSuccess.observe(viewLifecycleOwner) {
+                interfaceDialog.dismisDialogLoading()
                 listModel = it
-                setup()
+                if (it.isNotEmpty()){
+                    refreshData()
+                }else{
+                    val confirmDialog = interfaceDialog.showDialogConfirmWarning("Warning!", "User not found")
+                    confirmDialog.setConfirmClickListener {
+                        confirmDialog.dismiss()
+                    }
+                    confirmDialog.show()
+                }
             }
             onError.observe(viewLifecycleOwner) {
                 interfaceDialog.dismisDialogLoading()
@@ -98,10 +87,16 @@ class PopularFragment : Fragment() {
         }
     }
 
-    private fun setup(){
-        val popularAdapter = PopularAdapter()
-        binding.tvPopular.isSaveEnabled = false
-        binding.tvPopular.adapter = popularAdapter
+    private fun refreshData(){
         popularAdapter.provided(listModel, requireContext(), interfaceDialog, popularVM)
+        popularAdapter.notifyDataSetChanged()
+        isStart = true
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (isStart)
+            refreshData()
+    }
+
 }

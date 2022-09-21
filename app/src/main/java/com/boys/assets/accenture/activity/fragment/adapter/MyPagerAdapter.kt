@@ -7,8 +7,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.boys.assets.accenture.activity.fragment.favorite.FavoriteFragment
 import com.boys.assets.accenture.activity.fragment.popular.presentation.PopularFragment
+import com.boys.assets.accenture.utils.LogUtil
 
 class MyPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
+    private val TAG = this::class.java.simpleName
+
     private val mFragmentTags: MutableMap<Int, String>
     private val mFragmentManager: FragmentManager
 

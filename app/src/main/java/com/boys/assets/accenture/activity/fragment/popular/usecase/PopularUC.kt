@@ -1,5 +1,6 @@
 package com.boys.assets.accenture.activity.fragment.popular.usecase
 
+import com.boys.assets.accenture.BuildConfig
 import com.boys.assets.accenture.activity.fragment.popular.model.PopularModel
 import com.boys.assets.accenture.activity.fragment.popular.model.PopularReqModel
 import com.boys.assets.accenture.di.network.Repository
@@ -12,8 +13,7 @@ class PopularUC constructor(
     private val TAG = this::class.java.simpleName
 
     override suspend fun run(params: Any?): PopularModel {
-        val token = "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"
-        return repository.getPopular(token, params as PopularReqModel)
+        return repository.getPopular(BuildConfig.TOKEN_GITHUB, params as PopularReqModel)
     }
 
 }

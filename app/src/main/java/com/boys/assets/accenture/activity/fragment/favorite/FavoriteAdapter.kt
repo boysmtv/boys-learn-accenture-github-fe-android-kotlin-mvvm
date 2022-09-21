@@ -3,14 +3,13 @@ package com.boys.assets.accenture.activity.fragment.favorite
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.boys.assets.accenture.R
 import com.boys.assets.accenture.activity.fragment.popular.model.Users
 import com.boys.assets.accenture.activity.fragment.popular.vm.PopularViewModel
 import com.boys.assets.accenture.activity.users.presentation.UsersActivity
-import com.boys.assets.accenture.databinding.ActivitySearchListItemBinding
+import com.boys.assets.accenture.databinding.FragmentPopularListItemBinding
 import com.boys.assets.accenture.helper.InterfaceDialog
 import com.boys.assets.accenture.utils.LogUtil
 import com.bumptech.glide.Glide
@@ -41,22 +40,22 @@ class FavoriteAdapter: RecyclerView.Adapter<FavoriteAdapter.AddressHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteAdapter.AddressHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ActivitySearchListItemBinding.inflate(inflater, parent, false)
+        val binding = FragmentPopularListItemBinding.inflate(inflater, parent, false)
         return AddressHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        return this.listModel.size
+        return listModel.size
     }
 
     override fun onBindViewHolder(holder: FavoriteAdapter.AddressHolder, position: Int) {
-        val model = this.listModel[position]
+        val model = listModel[position]
         holder.bind(position, model)
     }
 
-    inner class AddressHolder(binding: ActivitySearchListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class AddressHolder(binding: FragmentPopularListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        private val thisBinding: ActivitySearchListItemBinding
+        private val thisBinding: FragmentPopularListItemBinding
         init {
             thisBinding = binding
         }
@@ -73,10 +72,10 @@ class FavoriteAdapter: RecyclerView.Adapter<FavoriteAdapter.AddressHolder>() {
             val allData = popularVM.getAll()
             if (allData.isNotEmpty()){
                 for (element in allData)
-                    if (model.id == element.id && model.login.equals(element.login) && model.avatar_url.equals(element.avatar_url)){
+                    if (model.url == element.url && model.login == element.login){
                         thisBinding.ivFavorite.setBackgroundResource(R.drawable.ic_fav_true)
-                        LogUtil.e(TAG, "model : " + Gson().toJson(model))
-                        LogUtil.e(TAG, "element : " + Gson().toJson(element))
+                        LogUtil.e(TAG, "model : ${model.url}, element: ${element.url}")
+                        LogUtil.e(TAG, "model : ${model.login}, element: ${element.login}")
                         break
                     }
             }
@@ -97,7 +96,7 @@ class FavoriteAdapter: RecyclerView.Adapter<FavoriteAdapter.AddressHolder>() {
                     addModel.avatar_url = model.avatar_url
                     addModel.url = model.url
 
-                val userLocal = popularVM.getID(model.id!!)
+                val userLocal = popularVM.getID(model.login!!)
                 if (userLocal > 0){
                     thisBinding.ivFavorite.setBackgroundResource(R.drawable.ic_fav)
                     popularVM.delFav(addModel)

@@ -1,6 +1,7 @@
 package com.boys.assets.accenture.domain.usecase
 
 import com.boys.assets.accenture.domain.exception.traceErrorException
+import com.boys.assets.accenture.utils.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.CancellationException

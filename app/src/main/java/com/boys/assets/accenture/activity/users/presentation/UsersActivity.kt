@@ -125,7 +125,7 @@ class UsersActivity : AppCompatActivity() {
             addModel.avatar_url = model.avatar_url
             addModel.url = model.url
 
-            val userLocal = popularVM.getID(model.id!!)
+            val userLocal = popularVM.getID(model.login!!)
             if (userLocal > 0){
                 binding.ivFavorite.setBackgroundResource(R.drawable.ic_fav)
                 popularVM.delFav(addModel)

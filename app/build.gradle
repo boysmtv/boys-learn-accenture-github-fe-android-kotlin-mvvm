@@ -22,6 +22,7 @@ android {
         multiDexEnabled true
 
         buildConfigField 'String', 'BASE_URL', '"https://api.github.com/"'
+        buildConfigField 'String', 'TOKEN_GITHUB', '"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"'
     }
 
     buildTypes {

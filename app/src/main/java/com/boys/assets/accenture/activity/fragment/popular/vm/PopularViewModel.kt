@@ -33,9 +33,7 @@ class PopularViewModel (
             viewModelScope, reqModel,
             object : UseCaseResponse<PopularModel> {
                 override fun onSuccess(result: PopularModel) {
-                    result.items?.let { it -> {
-                        onSuccess.value = it
-                    } }
+                    onSuccess.value = result.items
                 }
                 override fun onError(apiError: ApiError) {
                     onError.value = apiError.getErrorMessage()
@@ -58,8 +56,8 @@ class PopularViewModel (
         )
     }
 
-    fun getID(users: Int): Int = runBlocking {
-        usersDao.getByID(users)
+    fun getID(login: String): Int = runBlocking {
+        usersDao.getByID(login)
     }
     fun getAll(): List<Users> = runBlocking {
         usersDao.getAll()

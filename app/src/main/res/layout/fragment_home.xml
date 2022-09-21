@@ -20,8 +20,9 @@
             android:layout_marginStart="@dimen/_8dp"
             android:layout_toStartOf="@+id/iv_search"
             android:background="@null"
-            android:hint="Search"
-            android:singleLine="true" />
+            android:hint="@string/search"
+            android:singleLine="true"
+            android:text="" />
 
         <ImageView
             android:id="@+id/iv_search"
@@ -35,8 +36,19 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:background="@color/gray_low"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        tools:listitem="@layout/fragment_popular_list_item"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_home"

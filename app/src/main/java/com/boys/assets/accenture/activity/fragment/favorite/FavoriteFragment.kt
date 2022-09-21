@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.boys.assets.accenture.activity.fragment.popular.vm.PopularViewModel
 import com.boys.assets.accenture.databinding.FragmentPopularBinding
 import com.boys.assets.accenture.helper.InterfaceDialog
+import com.boys.assets.accenture.utils.LogUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteFragment : Fragment() {
@@ -17,6 +18,7 @@ class FavoriteFragment : Fragment() {
 
     private lateinit var interfaceDialog: InterfaceDialog
     private lateinit var binding: FragmentPopularBinding
+    private val favoriteAdapter = FavoriteAdapter()
 
     fun newInstance(): FavoriteFragment {
         return FavoriteFragment()
@@ -27,6 +29,7 @@ class FavoriteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
+        LogUtil.e(TAG, "onCreateView")
         binding = FragmentPopularBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -35,18 +38,23 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         interfaceDialog = InterfaceDialog(requireContext())
 
+        LogUtil.e(TAG, "onViewCreated")
         setup()
     }
 
     private fun setup(){
-        val favoriteAdapter = FavoriteAdapter()
         binding.tvPopular.adapter = favoriteAdapter
-        popularVM.getAll().let { it1 -> favoriteAdapter.provided(it1, requireContext(), interfaceDialog, popularVM) }
+        refreshData()
     }
 
+    private fun refreshData(){
+        popularVM.getAll().let { it1 -> favoriteAdapter.provided(it1, requireContext(), interfaceDialog, popularVM) }
+        favoriteAdapter.notifyDataSetChanged()
+    }
 
     override fun onResume() {
         super.onResume()
-        setup()
+        LogUtil.e(TAG, "onResume")
+        refreshData()
     }
 }
